@@ -1,25 +1,92 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+
+// 懒加载，动态引入
+const Login = () => import("@/views/Login/LoginPage.vue");
+const Apply = () => import("@/views/Apply/ApplyPage.vue");
+const Check = () => import("@/views/Check/CheckPage.vue");
+const Exception = () => import("@/views/Exception/ExceptionPage.vue");
+const Home = () => import("@/views/Home/HomePage.vue");
+const Sign = () => import("@/views/Sign/SignPage.vue");
+
+// meta给动态菜单提供信息
+declare module "vue-router" {
+  interface RouteMeta {
+    menu?: boolean;
+    title?: string;
+    icon?: string;
+    auth?: boolean;
+  }
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "/",
+    name: "home",
+    component: Home,
+    redirect: "/sign", //重定向到sign
+    meta: {
+      menu: true,
+      title: "考勤管理",
+      icon: "document-copy",
+      auth: true,
+    },
+    children: [
+      {
+        path: "sign",
+        name: "sign",
+        component: Sign,
+        meta: {
+          menu: true,
+          title: "在线打卡签到",
+          icon: "calendar",
+          auth: true,
+        },
+      },
+      {
+        path: "exception",
+        name: "exception",
+        component: Exception,
+        meta: {
+          menu: true,
+          title: "异常考勤查询",
+          icon: "warning",
+          auth: true,
+        },
+      },
+      {
+        path: "apply",
+        name: "apply",
+        component: Apply,
+        meta: {
+          menu: true,
+          title: "添加考勤审批",
+          icon: "document-add",
+          auth: true,
+        },
+      },
+      {
+        path: "check",
+        name: "check",
+        component: Check,
+        meta: {
+          menu: true,
+          title: "我的考勤审批",
+          icon: "finished",
+          auth: true,
+        },
+      },
+    ],
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

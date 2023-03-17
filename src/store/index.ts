@@ -11,6 +11,8 @@ import signs from "./modules/signs";
 import checks from "./modules/checks";
 import news from "./modules/news";
 
+import VuexPersistence from "vuex-persist";
+
 // 为 store state 声明类型
 export interface State {}
 
@@ -22,7 +24,12 @@ export interface StateAll extends State {
 }
 
 // 定义 injection key
-export const key: InjectionKey<Store<State>> = Symbol();
+export const key: InjectionKey<Store<StateAll>> = Symbol();
+
+const vuexLocal = new VuexPersistence<State>({
+  storage: window.localStorage,
+  reducer: (state) => ({ users: { token: (state as StateAll).users.token } }),
+});
 
 export const store = createStore<State>({
   state: {},
@@ -35,6 +42,7 @@ export const store = createStore<State>({
     checks,
     news,
   },
+  plugins: [vuexLocal.plugin],
 });
 
 // 定义自己的 `useStore` 组合式函数

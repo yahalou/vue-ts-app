@@ -15,7 +15,7 @@ const Sign = () => import("@/views/Sign/SignPage.vue");
 // meta给动态菜单提供信息
 declare module "vue-router" {
   interface RouteMeta {
-    menu?: boolean;
+    menu?: boolean; // 为true的话这一项要添加到动态菜单中
     title?: string;
     icon?: string;
     auth?: boolean;
@@ -25,7 +25,7 @@ declare module "vue-router" {
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
+    name: "home", // 后台返回账号的权限跟name关联在一起
     component: Home,
     redirect: "/sign", //重定向到sign
     meta: {
